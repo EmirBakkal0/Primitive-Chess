@@ -5,11 +5,8 @@ public class Bishop extends Piece{
 //fil
 
 
-    public boolean canMove(String destination){
-        boolean validMove;
-
-        return true;
-
+    public boolean canMove(String to){
+        return canItMoveDiagonally(to);
     }
 
 
@@ -20,3 +17,4 @@ public class Bishop extends Piece{
     }
 
 }
+

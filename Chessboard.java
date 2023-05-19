@@ -81,20 +81,28 @@ public class Chessboard{
         for (int i = 0; i <8 ; i++) {
             squares[6][i].setPiece(new Pawn(Chessboard.BLACK,squares[6][i]));
         }
-        //whitePlaying=true;
+
     }
 
 
     public boolean isGameEnded(){
-        //TODO make it so it ends when no pieces exist from one color
+        boolean whiteFound=false;
+        boolean blackFound=false;
+
         for (int i = 0; i <8 ; i++) {
             for (int j = 0; j < 8 ; j++) {
-                if (squares[i][j].isEmpty()){   // all the squares are empty the game ends
-                    return false;
+                if (squares[i][j].getPiece() != null ){
+                    if(( squares[i][j].getPiece().getColor()==WHITE )) {
+                        whiteFound= true;
+                    }
+
+                    if (squares[i][j].getPiece().getColor()==BLACK) {
+                        blackFound= true;
+                    }
                 }
             }
         }
-        return true;
+        return !(whiteFound&&blackFound);
     }
 
     public boolean isWhitePlaying(){
@@ -103,12 +111,20 @@ public class Chessboard{
 
 
 
-    public Piece getPieceAt(String location){
+    public Piece getPieceAt(String location) throws InvalidCoordinateException{
         char column = location.charAt(0);
         String[] splitted = location.split("");
         int row = Integer.parseInt(splitted[1]);
         //System.out.println(column);
         //System.out.println(row);
+        if(row > 8 ||row < 1){
+            throw new InvalidCoordinateException("Row number should be between 1 and 8.");
+        }
+
+
+        if(columnKey.get(column)==null){
+            throw new InvalidCoordinateException("Column character should be between A and H.");
+        }
         return squares[row-1][columnKey.get(column)].getPiece();
     }
 
@@ -120,42 +136,101 @@ public class Chessboard{
         return squares[row-1][columnKey.get(column)];
     }
 
-    public Square[] getRowSquaresBetween(Square loc1,Square loc2) {
-        int row2= loc2.getRow();
-        int row1= loc1.getRow();
-        int count;
-        if(row2> row1){
-            count=loc2.getRow()-loc1.getRow();
+    public Square[] getRowSquaresBetween(Square s1, Square s2){
+        char col= s1.getColumn();
+        int upperLimit= s2.getRow();
+        int lowerLimit= s1.getRow();
+        if(lowerLimit > upperLimit){
+            lowerLimit=s2.getRow();
+            upperLimit=s1.getRow();
         }
-        else count=loc1.getRow()-loc2.getRow();
+        Square[] toReturn =new Square[upperLimit-lowerLimit-1];//minus 1 here otherwise the last object will be null
+        int j =0;
+        for (int i = lowerLimit; i < upperLimit-1; i++) { //-1 on upperlim becuz the index will be out of bounds
 
-
-        Square[] toReturn= new Square[count];
-
-        for (int i = 0; i < count ; i++) {
-            //TODO figure out this part
-            //toReturn[i]=squares[i][j]
-            toReturn[i]=new Square(loc1.getRow()+i+1,loc1.getColumn(),this);
+            toReturn[j]=squares[i][columnKey.get(col)];
+            j++;
         }
         return toReturn;
     }
+
+
 
     public Square[] getColSquaresBetween(Square loc1,Square loc2){
-        int count= loc1.getColDistance(loc2);
-        if(count<0){
-            count=count-(2*count);
+        int row= loc1.getRow();
+        char upperCol=loc2.getColumn();
+        char lowerCol=loc1.getColumn();
+        if(columnKey.get(lowerCol) > columnKey.get(upperCol)){
+            lowerCol=upperCol;
+            upperCol=loc1.getColumn();
+        }
+        int upperLim=columnKey.get(upperCol); //
+        int lowerLim=columnKey.get(lowerCol)+1;
+        int size=upperLim-lowerLim;
+        int j =0;
+        Square[] toReturn =new Square[size];
+        for (int i =lowerLim ; i <upperLim ; i++) {
+            toReturn[j]=squares[row-1][i];
+            j++;
         }
 
-        Square[] toReturn =new Square[count];
-        for (int i = 0; i <count ; i++) {
-            toReturn[i]=new Square(loc1.getRow(), (char) (loc1.getColumn()+1),this);
-        }
         return toReturn;
     }
 
+    public Square[] getDiagSquaresBetween(Square loc1, Square loc2) { //loc1 c1  loc2 h6 for example      //loc1 c8  loc2 f5
+        if(loc1.isAtSameDiagonal(loc2)){
+            boolean topLefttoBottomRight=false;
+            char upperCol=loc2.getColumn(); // h  //f
+            char lowerCol=loc1.getColumn(); // c  //c
+            int upperRow= (loc2.getRow());
+
+            int lowerRow= loc1.getRow(); // 1   //8
+            if(upperRow<lowerRow){   // upper=5  lower =8
+                lowerRow=upperRow;  //lower=8
+                upperRow=loc1.getRow(); //upper=5
+                topLefttoBottomRight=!topLefttoBottomRight;
+            }
+            upperRow=upperRow-1; //-1 is here because array starts with 0    6-1=5   8-1=7
+            int upperLimCol=columnKey.get(upperCol); // h -> 7   // f->5
+            int lowerLimCol=columnKey.get(lowerCol); // c -> 2   // c-> 2
+            if (lowerLimCol>upperLimCol){ //lower=2 upper=5  -> false
+                int temp=lowerLimCol;
+                lowerLimCol=upperLimCol;
+                upperLimCol=temp;
+                topLefttoBottomRight=!topLefttoBottomRight;
+            }
+
+            Square []toReturn= new Square[Math.abs(upperRow-lowerRow)]; // 5-1 =4  //7-5=2
+            int index=0;
+
+            if(topLefttoBottomRight) {
+                while (lowerLimCol/* 2 */ < upperLimCol/*5*/ && lowerRow/*5*/ < upperRow/*7*/) {
+                    lowerLimCol++;
+                    upperRow--;
+                    toReturn[index/* 0 */] = squares[upperRow/* 6 */][lowerLimCol /* 3 */]; // gives [d7,e6]
+                    index++;
+
+                }
+            }
+            else {
+                while (lowerLimCol < upperLimCol && lowerRow < upperRow) {
+                    lowerLimCol++;
+                    toReturn[index/* 0 */] = squares[lowerRow/* 1 */][lowerLimCol /* 3 */]; // gives [d2,e3,...,g5]
+                    index++;
+                    lowerRow++;
+                }
+
+            }
+
+            return toReturn;
+        }
+        else return null;
+    }
 
     public void nextPlayer() {
 
         whitePlaying= !whitePlaying;
     }
+
+
 }

@@ -9,8 +9,8 @@ public class Queen extends Piece {
 
 
     @Override
-    public boolean canMove(String loc) {
-        return true;
+    public boolean canMove(String to) {
+        return canItMoveDiagonally(to) || canItMoveHorizontally(to) || canItMoveVertically(to);
     }
 
 

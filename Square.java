@@ -100,6 +100,13 @@ public class Square {
     public boolean isAtSameRow(Square s) {
         return this.getRow()==s.getRow();
     }
+    public boolean isAtSameDiagonal(Square targetLocation) {
+        if (Math.abs(this.getRow()-targetLocation.getRow()) == Math.abs(columnKey.get(this.getColumn()) -columnKey.get(targetLocation.getColumn())  )){
+            /// if rowDifference equals colDifference then they're at same diagonal
+            return true;
+        }
+        else return false;
+    }
 
     public boolean isNeighborColumn(Square target){
         int col=columnKey.get(this.getColumn());
@@ -112,7 +119,7 @@ public class Square {
     }
 
     public boolean isEmpty(){
-        if (piece==null){
+        if (piece==null|| piece.toString().equals(" ")){
             return true;
         }
         else return false;
@@ -141,6 +148,7 @@ public class Square {
     public void clear() {
         piece=null;
     }
+
 
 
 }

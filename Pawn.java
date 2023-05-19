@@ -7,12 +7,6 @@ public class Pawn extends Piece {
         super(color, location);
     }
 
-
-    @Override
-    public int getColor() {
-        return color;
-    }
-
     @Override
     public boolean canMove(String to) {
         boolean validMove=false;
@@ -25,7 +19,7 @@ public class Pawn extends Piece {
                     if (initialLocation) {
                         // pawn move 2 squares so we are checking 2 squares
 
-                        validMove = targetLocation.isEmpty() && location.getBoard().getRowSquaresBetween(location, targetLocation)[0].isEmpty();
+                        validMove = targetLocation.isEmpty() && location.getBoard().getRowSquaresBetween(targetLocation, location)[0].isEmpty();
 
                     }
                 }
@@ -59,10 +53,6 @@ public class Pawn extends Piece {
 
         return validMove;
     }
-
-
-
-
 
     @Override
     public void move(String to) {
