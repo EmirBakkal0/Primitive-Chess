@@ -24,7 +24,7 @@ public class Chessboard{
 
     }
 
-    public void printBoard(){
+    public void printBoard(){//Prints the chessboard.
         String chars ="    A   B   C   D   E   F   G   H   \n";
         String line="  ---------------------------------  ";
         System.out.println(chars+line);
@@ -50,7 +50,7 @@ public class Chessboard{
             }
 
         }
-        squares[0][0].setPiece(new Rook(0,squares[0][0]));  //starting positions
+        squares[0][0].setPiece(new Rook(0,squares[0][0]));  //setting the starting positions
         squares[0][1].setPiece(new Knight(Chessboard.WHITE,squares[0][1]));
         squares[0][2].setPiece(new Bishop(0,squares[0][2]));
         squares[0][3].setPiece(new Queen(0,squares[0][3]));
@@ -85,7 +85,7 @@ public class Chessboard{
     }
 
 
-    public boolean isGameEnded(){
+    public boolean isGameEnded(){ //Checks to see if the game is ended if there are no pieces that exists from one color.
         boolean whiteFound=false;
         boolean blackFound=false;
 
@@ -102,7 +102,7 @@ public class Chessboard{
                 }
             }
         }
-        return !(whiteFound&&blackFound);
+        return !(whiteFound&&blackFound); // if both white and black piece is found then its false , if only one color found its true
     }
 
     public boolean isWhitePlaying(){
@@ -111,17 +111,13 @@ public class Chessboard{
 
 
 
-    public Piece getPieceAt(String location) throws InvalidCoordinateException{
+    public Piece getPieceAt(String location) throws InvalidCoordinateException{ ///### returns the piece from the desired location
         char column = location.charAt(0);
         String[] splitted = location.split("");
         int row = Integer.parseInt(splitted[1]);
-        //System.out.println(column);
-        //System.out.println(row);
         if(row > 8 ||row < 1){
             throw new InvalidCoordinateException("Row number should be between 1 and 8.");
         }
-
-
         if(columnKey.get(column)==null){
             throw new InvalidCoordinateException("Column character should be between A and H.");
         }
@@ -129,14 +125,16 @@ public class Chessboard{
     }
 
     public Square getSquareAt(String location){
+        ///### returns the square from the desired location
         char column = location.charAt(0);
         String[] splitted = location.split("");
         int row = Integer.parseInt(splitted[1]);
 
+
         return squares[row-1][columnKey.get(column)];
     }
 
-    public Square[] getRowSquaresBetween(Square s1, Square s2){
+    public Square[] getRowSquaresBetween(Square s1, Square s2){ // returns the squares between s1 and s2
         char col= s1.getColumn();
         int upperLimit= s2.getRow();
         int lowerLimit= s1.getRow();
@@ -157,6 +155,7 @@ public class Chessboard{
 
 
     public Square[] getColSquaresBetween(Square loc1,Square loc2){
+        //Returns the squares between given squares if they are at the same row.
         int row= loc1.getRow();
         char upperCol=loc2.getColumn();
         char lowerCol=loc1.getColumn();
@@ -178,7 +177,7 @@ public class Chessboard{
     }
 
     public Square[] getDiagSquaresBetween(Square loc1, Square loc2) { //loc1 c1  loc2 h6 for example      //loc1 c8  loc2 f5
-        if(loc1.isAtSameDiagonal(loc2)){
+        if(loc1.isAtSameDiagonal(loc2)){ //Returns the squares between given squares if they are at the same diagonal line.
             boolean topLefttoBottomRight=false;
             char upperCol=loc2.getColumn(); // h  //f
             char lowerCol=loc1.getColumn(); // c  //c
@@ -203,7 +202,7 @@ public class Chessboard{
             Square []toReturn= new Square[Math.abs(upperRow-lowerRow)]; // 5-1 =4  //7-5=2
             int index=0;
 
-            if(topLefttoBottomRight) {
+            if(topLefttoBottomRight) { // if they are top left to bottom right
                 while (lowerLimCol/* 2 */ < upperLimCol/*5*/ && lowerRow/*5*/ < upperRow/*7*/) {
                     lowerLimCol++;
                     upperRow--;
@@ -212,7 +211,7 @@ public class Chessboard{
 
                 }
             }
-            else {
+            else {//if they are top right to bottom left
                 while (lowerLimCol < upperLimCol && lowerRow < upperRow) {
                     lowerLimCol++;
                     toReturn[index/* 0 */] = squares[lowerRow/* 1 */][lowerLimCol /* 3 */]; // gives [d2,e3,...,g5]
@@ -227,7 +226,7 @@ public class Chessboard{
         else return null;
     }
 
-    public void nextPlayer() {
+    public void nextPlayer() {//Changes the player to the next color.
 
         whitePlaying= !whitePlaying;
     }

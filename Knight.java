@@ -17,7 +17,7 @@ public class Knight extends Piece {
                 || (colDistance ==-2 && rowDistance== 1 ) || (colDistance ==-1 && rowDistance== 2 ) || (colDistance ==1 && rowDistance== -2 );
 
         if (color==Chessboard.WHITE && validDistances){
-            if( targetLocation.getPiece() == null || targetLocation.getPiece().getColor() ==Chessboard.BLACK){
+            if( targetLocation.getPiece() == null || targetLocation.getPiece().getColor() ==Chessboard.BLACK){ // if target is empty or has an opposing colored piece
                 validMove=true;
             }
         }
@@ -26,6 +26,9 @@ public class Knight extends Piece {
                 validMove = true;
             }
         }
+        //If the desired locations column distance is 2 and row distance is 1 or vice versa and the desired
+        //location is empty or has an opposing color piece it will return true.
+
         return validMove;
     }
 

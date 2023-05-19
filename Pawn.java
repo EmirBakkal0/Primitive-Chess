@@ -17,9 +17,10 @@ public class Pawn extends Piece {
             if (color == Chessboard.WHITE && rowDistance >0 && rowDistance <=2) {
                 if (rowDistance == 2) {
                     if (initialLocation) {
-                        // pawn move 2 squares so we are checking 2 squares
+                        // pawn can move 2 squares, so we are checking 2 squares
 
                         validMove = targetLocation.isEmpty() && location.getBoard().getRowSquaresBetween(targetLocation, location)[0].isEmpty();
+                        //check if the targetlocation and the square between initial and target is empty
 
                     }
                 }
@@ -43,6 +44,8 @@ public class Pawn extends Piece {
              }
 
         else if (this.location.isNeighborColumn(targetLocation)) {
+            //if the target is neighbour to initial position it will check if the row distance is white and the
+            //target’s not empty, and it has an opposing color piece there
             if(color== Chessboard.WHITE && rowDistance==1){
                 validMove= !targetLocation.isEmpty()&& targetLocation.getPiece().getColor() == Chessboard.BLACK;
             }
@@ -55,7 +58,10 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public void move(String to) {
+    public void move(String to) { //
+        //Pawn class overrides the move method in Piece class because if the pawn reaches last row it will be
+        //promoted to queen. Other than that it’s the same as Piece class.
+
         Square targetLocation=location.getBoard().getSquareAt(to);
 
         if (targetLocation.isAtLastRow(color)){   /// this is for promoting to queen at last row

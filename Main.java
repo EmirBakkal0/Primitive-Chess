@@ -15,10 +15,9 @@ public class Main {
                 try {
                     String coord = reader.next();
                     coord = coord.strip();
-                    piece = board.getPieceAt(coord.toLowerCase());
-                } catch (InvalidCoordinateException ice) {
+                    piece = board.getPieceAt(coord.toLowerCase()); // converting the string to lower case,otherwise it will give error
+                } catch (InvalidCoordinateException ice) {// this is to make sure the program won't crash when entered wrong characters, etc.
                     System.out.println(ice.getMessage());
-                   // System.out.println("You entered a wrong coordinate. Please try again..");
                 }
                 catch (Exception e){
                     System.out.println("You've entered a wrong coordinate. Please try again..");
@@ -39,7 +38,7 @@ public class Main {
                     newLocation = newLocation.toLowerCase();
 
                     canPieceMove = piece.canMove(newLocation);
-                } catch (Exception e) {
+                } catch (Exception e) {// this is to make sure the program won't crash when entered wrong characters, etc.
                     //System.out.println(e.getMessage());
                     System.out.println("You've entered a wrong coordinate. Please try again..");
                 }

@@ -7,6 +7,9 @@ public class King extends Piece {
 
     @Override
     public boolean canMove(String loc) {
+        //First it gets the column and row distance of the locations and if the distances are less and equal to 1
+        //and if the place is empty or there is an opposing color piece there it will return true.
+
         boolean validMove = false;
         Square targetLocation=location.getBoard().getSquareAt(loc);
         int rowDistance= targetLocation.getRowDistance(location);
@@ -14,14 +17,16 @@ public class King extends Piece {
         boolean distances= colDistance<= 1 && colDistance >= -1 && rowDistance <= 1 && rowDistance >= -1;
 
         if(color == Chessboard.WHITE && distances ){
-            if(targetLocation.getPiece() == null || targetLocation.getPiece().getColor() == Chessboard.BLACK ) {
+            if(targetLocation.getPiece() == null || targetLocation.getPiece().getColor() == Chessboard.BLACK ) { // if target is empty or has an opposing colored piece
                 validMove = true;
             }
         } else if (color == Chessboard.BLACK && distances) {
-            if(targetLocation.getPiece() == null || targetLocation.getPiece().getColor() == Chessboard.WHITE ) {
+            if(targetLocation.getPiece() == null || targetLocation.getPiece().getColor() == Chessboard.WHITE ) { // if target is empty or has an opposing colored piece
                 validMove = true;
             }
         }
+        //First it gets the column and row distance of the locations and if the distances are less and equal to 1
+        //and if the place is empty or there is an opposing color piece there it will return true.
 
         return validMove;
     }
